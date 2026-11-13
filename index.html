@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>clinergy-app</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+      try {
+        const a11y = JSON.parse(localStorage.getItem('clinergy_a11y') || '{}')
+        if (a11y.highContrast) document.documentElement.classList.add('high-contrast')
+        if (a11y.reduceMotion) document.documentElement.classList.add('reduce-motion')
+        if (a11y.simpleView) document.documentElement.classList.add('simple-view')
+        if (a11y.fontSize && a11y.fontSize !== 'normal') {
+          const sizes = { small:'13px', large:'19px', xlarge:'22px' }
+          document.documentElement.style.fontSize = sizes[a11y.fontSize] || '16px'
+        }
+      } catch(e) {}
+    </script>
+  </head>
+  <body>
+    <svg style="position:absolute;width:0;height:0" aria-hidden="true">
+      <defs>
+        <!-- Protanopia (red-blind) -->
+        <filter id="protanopia-filter">
+          <feColorMatrix type="matrix" values="
+            0.567 0.433 0 0 0
+            0.558 0.442 0 0 0
+            0     0.242 0.758 0 0
+            0     0     0     1 0"/>
+        </filter>
+        <!-- Deuteranopia (green-blind) -->
+        <filter id="deuteranopia-filter">
+          <feColorMatrix type="matrix" values="
+            0.625 0.375 0 0 0
+            0.7   0.3   0 0 0
+            0     0.3   0.7 0 0
+            0     0     0   1 0"/>
+        </filter>
+        <!-- Tritanopia (blue-blind) -->
+        <filter id="tritanopia-filter">
+          <feColorMatrix type="matrix" values="
+            0.95 0.05 0    0 0
+            0    0.433 0.567 0 0
+            0    0.475 0.525 0 0
+            0    0     0     1 0"/>
+        </filter>
+      </defs>
+    </svg>
+    <script>
+      // Apply dark mode before first render to prevent flash
+      try { if (localStorage.getItem('clinergy_darkmode') === 'true') document.documentElement.classList.add('dark'); } catch(e) {}
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

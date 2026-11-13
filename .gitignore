@@ -1,0 +1,59 @@
+# Dependencies & Build Output
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment & Config
+.env
+.env.*
+!.env.example
+.vercel
+
+# Temporary / Debug / Scratch / Build text files
+scratch/
+build_*.txt
+errors*.txt
+ts.txt
+ts_errors.txt
+restored_HomePage_*
+debug.js
+replaceToast.js
+strip_features.cjs
+docs/CLINERGY_PROJECT_REPORT.md
+CLINERGY_PROJECT_REPORT.md
+
+# Python & Backend
+__pycache__
+*.py[cod]
+*$py.class
+.venv
+venv
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/.venv
+backend/venv
+backend/__pycache__
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor & OS files
+.DS_Store
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
