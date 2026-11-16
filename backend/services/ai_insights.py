@@ -1,9 +1,3 @@
-"""
-ClinErgy AI Insights Service — Python port of aiInsightsService.js
-Uses the Groq API (llama-3.3-70b) to generate 7-day energy demand forecasts,
-anomaly detection, and cost savings recommendations from live Supabase data.
-Falls back to Scikit-Learn linear regression when the API is unavailable.
-"""
 from __future__ import annotations
 
 import json
@@ -20,7 +14,7 @@ from database.connection import get_supabase
 from schemas.models import AIInsightsResponse, DayPrediction
 from services.weather_service import fetch_weather
 
-# ── Constants ─────────────────────────────────────────────────────────────────
+# ── Constants ───────────────
 _GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 _GROQ_MODEL = "llama-3.3-70b-versatile"
 _PEAK_TARIFF = 8.5    # ₹/kWh  (06:00–22:00 IST)
@@ -103,7 +97,7 @@ def _fetch_recent_zone_data() -> list[dict]:
         return []
 
 
-# ── Scikit-Learn fallback forecast ────────────────────────────────────────────
+# ── Scikit-Learn fallback forecast ─────────────────────────────
 
 def _sklearn_forecast(recent: list[dict]) -> AIInsightsResponse:
     """
@@ -153,7 +147,7 @@ def _sklearn_forecast(recent: list[dict]) -> AIInsightsResponse:
     )
 
 
-# ── Groq API call ─────────────────────────────────────────────────────────────
+# ── Groq API call ─────────
 
 async def _call_groq(recent: list[dict], weather_temp: float,
                      weather_cond: str, weather_hum: int) -> AIInsightsResponse:
@@ -265,7 +259,7 @@ Respond with ONLY this JSON structure:
     return result
 
 
-# ── Public entry point ────────────────────────────────────────────────────────
+# ── Public entry point ─────────────────────
 
 async def generate_insights() -> AIInsightsResponse:
     """
