@@ -1,13 +1,10 @@
+// DEPRECATED: Direct browser-side Groq calls removed for security.
+// Chat messages are now routed through the FastAPI backend via backendApi.ts
+// (see src/components/Chatbot/Chatbot.jsx → backendApi.chat()).
+// This file is retained for the Supabase helper functions and getQuickReplies;
+// it no longer reads VITE_GROQ_API_KEY or calls api.groq.com.
 import { supabase } from '../lib/supabase';
 import { fetchCurrentWeather } from './weatherService';
-
-// Groq API configuration
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
-
-function getApiKey() {
-  return import.meta.env.VITE_GROQ_API_KEY || '';
-}
 
 /** Fetch latest zone sensor readings */
 async function fetchZoneSummary() {
@@ -148,57 +145,15 @@ You can answer questions about:
  * @param {string} userRole - The authenticated user's role
  * @returns {Promise<string>} The AI response text
  */
-export async function sendChatMessage(history, userMessage, currentPage, userRole) {
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    return "⚠️ **AI not configured.** Please set `VITE_GROQ_API_KEY` in your `.env` file to enable the chatbot.\n\nIn the meantime, I can tell you that CLINERGY monitors energy usage across all hospital zones. Check the **Dashboard** or **AI Insights** page for live data.";
-  }
-
-  try {
-    const systemPrompt = await buildSystemPrompt(currentPage, userRole);
-
-    // Build chat history in OpenAI format
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      ...history
-        .filter(m => m.role !== 'system')
-        .map(m => ({
-          role: m.role === 'assistant' ? 'assistant' : 'user',
-          content: m.content,
-        })),
-      { role: 'user', content: userMessage },
-    ];
-
-    const response = await fetch(GROQ_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages,
-        temperature: 0.7,
-        max_tokens: 600,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text();
-      throw new Error(`Groq API error ${response.status}: ${errorBody}`);
-    }
-
-    const result = await response.json();
-    return result.choices?.[0]?.message?.content || "I couldn't generate a response. Please try again.";
-
-  } catch (err) {
-    console.error('Chatbot error:', err);
-    if (err.message?.includes('API')) {
-      return "⚠️ **Invalid API key.** Please check `VITE_GROQ_API_KEY` in your `.env` file.";
-    }
-    return "😔 I'm having trouble connecting right now. Please try again in a moment. You can also check the **AI Insights** page for energy data.";
-  }
+/**
+ * sendChatMessage — DEPRECATED stub.
+ * Chat is now handled by backendApi.chat() in backendApi.ts, which routes
+ * through the FastAPI backend and falls back to offline mock responses when
+ * the backend is unreachable.  This stub is kept so any stale import does not
+ * crash; it always returns the offline fallback message.
+ */
+export async function sendChatMessage(_history, _userMessage, _currentPage, _userRole) {
+  return "😔 I'm having trouble connecting right now. Please try again in a moment. You can also check the **AI Insights** page for energy data.";
 }
 
 /** Quick-reply suggestions based on current page */

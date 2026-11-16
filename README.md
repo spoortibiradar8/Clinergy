@@ -126,7 +126,6 @@ cp .env.example .env
 | :--- | :--- | :--- |
 | `VITE_SUPABASE_URL` | Supabase project URL for database connection | `https://your-project-id.supabase.co` |
 | `VITE_SUPABASE_ANON_KEY` | Supabase anonymous public API key | `your-anon-key-placeholder` |
-| `VITE_GROQ_API_KEY` | Groq API key for direct browser fallback AI calls | `gsk_your_groq_api_key` |
 | `VITE_BACKEND_URL` | Base URL of the FastAPI backend service | `http://127.0.0.1:8000` |
 | `VITE_REQUIRE_AUTH` | Set `false` for demo access without login; `true` for strict auth | `false` |
 
