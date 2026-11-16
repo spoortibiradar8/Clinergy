@@ -11,11 +11,15 @@
 
 ---
 
-## Demo
+## Application Screenshots
 
-![Demo](docs/demo.gif)
+| Home Command Dashboard | Live Waveform Telemetry |
+| :---: | :---: |
+| ![Home Dashboard](docs/screenshots/dashboard.png) | ![Live Monitor](docs/screenshots/live-monitor.png) |
 
-> **TODO:** Replace with an interactive application walkthrough recording or GIF.
+| Zones & Inspection Drawer | Predictive Maintenance Registry |
+| :---: | :---: |
+| ![Zones Drawer](docs/screenshots/zones.png) | ![Maintenance](docs/screenshots/maintenance.png) |
 
 ---
 
@@ -24,7 +28,7 @@
 - **Real-Time Clinical Telemetry:** Live sub-second monitoring of power (kW), temperature (°C), voltage, and operating status across critical hospital wings (ICU, OT, Emergency, Wards, Pharmacy).
 - **Interactive Zone Analytics & Drawer:** Dynamic inspection drawer visualizing continuous power waveforms, peak demand thresholds, and historical energy logs per wing.
 - **Predictive Asset Maintenance:** Equipment health scoring for chillers, generators, and UPS systems with degradation risk indicators and work-order scheduling.
-- **AI Demand Forecasting & Tariff Analytics:** Weekly electrical load forecasting, carbon footprint calculation, and peak/off-peak cost analysis under localized electricity tariffs.
+- **AI Demand Forecasting & Tariff Analytics:** 7-day electrical load forecasting and anomaly detection implemented via Groq LLM (`llama-3.3-70b-versatile`) with Scikit-Learn `LinearRegression` fallback, alongside carbon footprint and peak/off-peak tariff cost calculations. *(ARIMA, LSTM, and Isolation Forest time-series algorithms are planned future enhancements).*
 - **Context-Aware Clinical Assistant:** Embedded chatbot powered by FastAPI and Groq LLM (`llama-3.3-70b-versatile`) with live telemetry context injection and page-aware quick replies.
 - **Compliance Reporting & Audit Export:** Server-side PDF generation via ReportLab alongside CSV telemetry export for environmental and hospital regulatory compliance.
 
@@ -42,7 +46,7 @@
 ### Backend
 - **Framework:** Python 3.11, FastAPI, Pydantic v2
 - **Server:** Uvicorn (ASGI)
-- **Data & Machine Learning:** Pandas, NumPy, Scikit-Learn
+- **Data & Machine Learning:** Pandas, NumPy, Scikit-Learn (`LinearRegression` fallback)
 - **Database & Realtime:** Supabase Python SDK (PostgreSQL)
 - **AI & Integrations:** Groq API (`llama-3.3-70b-versatile`), HTTPX (async HTTP)
 - **Reporting & Media:** ReportLab, Pillow
@@ -53,35 +57,42 @@
 
 CLINERGY is built with a decoupled architecture pairing a high-performance React SPA with an asynchronous Python FastAPI service and Supabase (PostgreSQL). The frontend connects directly to Supabase for realtime telemetry subscriptions and authentication state, while dispatching API requests to the FastAPI backend for compute-intensive tasks. The FastAPI service executes an asynchronous background IoT simulator that ingests and evaluates zone sensor streams. When clinical staff interact with the AI assistant, the backend constructs a live system prompt containing current sensor readings, active alerts, and weather data before querying the Groq LLM API. PDF compliance reports are compiled server-side and streamed directly to the client.
 
+### Architecture Flow
+
 ```mermaid
 flowchart LR
-    subgraph Client [Frontend — React + Vite]
-        UI[Dashboard & Telemetry UI]
+    subgraph Frontend [Frontend — React + Vite]
+        UI[User Dashboard & Telemetry UI]
         ChatUI[Clinical Chatbot UI]
     end
 
     subgraph Backend [Backend Service — FastAPI]
         API[FastAPI Routers]
-        Sim[Async IoT Simulator]
-        ChatSvc[Chatbot Context Builder]
-        PDF[ReportLab PDF Engine]
+        Sim[Telemetry Simulator - data_simulator.py]
+        Forecast[Forecasting Service - ai_insights.py]
+        ChatSvc[Chatbot Service - chatbot.py]
+        PDF[PDF Report Generator - pdf_service.py]
     end
 
     subgraph External [External Services & Database]
         DB[(Supabase / PostgreSQL)]
-        Groq[Groq LLM API]
+        Groq[Groq API - Llama 3.3]
         Weather[Open-Meteo Weather API]
     end
 
     UI -->|Realtime Subscriptions / Auth| DB
     UI -->|REST API Requests| API
-    ChatUI -->|Chat Message + Page Context| API
+    ChatUI -->|Chat Message + Context| API
     API --> Sim
     Sim -->|Telemetry Ingestion| DB
+    API --> Forecast
+    Forecast -->|Historical Readings| DB
+    Forecast -->|7-Day Prediction / Anomaly| Groq
+    Forecast -.->|Local Fallback| Sklearn[Scikit-Learn Linear Regression]
     API --> ChatSvc
-    ChatSvc -->|Query Live Sensor Readings| DB
+    ChatSvc -->|Live Sensor Context| DB
     ChatSvc -->|Prompt + Context| Groq
-    API -->|Fetch Weather & HVAC Impact| Weather
+    API -->|Ambient Conditions| Weather
     API --> PDF
 ```
 
@@ -131,6 +142,9 @@ npm run build
 ```
 
 ### 3. Backend Setup
+
+> **Note on Demo Mode:** When running in demo mode (`VITE_REQUIRE_AUTH=false`), the frontend runs standalone and does **not** require the backend to be running. The frontend includes built-in offline fallbacks and mock data for immediate evaluation. Starting the Python backend is optional, and is only required if you want live simulated telemetry generation, server-side ReportLab PDF generation, and backend Groq chat routing.
+
 Navigate into the backend directory and set up a virtual environment:
 ```bash
 cd backend
@@ -159,7 +173,7 @@ cp .env.example .env
 
 | Variable | Description | Default / Example |
 | :--- | :--- | :--- |
-| `SUPABASE_URL` | Supabase project URL for server-side operations | `https://your-project-id.supabase.co` |
+| `SUPABASE_URL` | Supabase project URL for server-side database operations | `https://your-project-id.supabase.co` |
 | `SUPABASE_ANON_KEY` | Supabase anonymous API key for backend ingestion | `your-anon-key-placeholder` |
 | `GROQ_API_KEY` | Groq API key for LLM-powered chatbot & predictions | `gsk_your_groq_api_key` |
 | `SIMULATOR_INTERVAL_SECONDS` | Interval in seconds between IoT telemetry ticks | `10` |
@@ -212,7 +226,7 @@ CLINERGY/
 
 ## Testing
 
-Backend test suites are implemented with `pytest`:
+Run the backend test suite with `pytest`:
 
 ```bash
 cd backend
