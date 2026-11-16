@@ -249,5 +249,5 @@ Distributed under the [MIT License](LICENSE).
 
 **Author:** Spoorti Biradar  
 **GitHub Profile:** [https://github.com/spoortibiradar8](https://github.com/spoortibiradar8)  
-**Email:** TODO  
-**LinkedIn:** TODO
+**Email:** spoortibiradar8@gmail.com
+
