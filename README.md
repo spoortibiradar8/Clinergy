@@ -28,7 +28,7 @@
 - **Real-Time Clinical Telemetry:** Live sub-second monitoring of power (kW), temperature (°C), voltage, and operating status across critical hospital wings (ICU, OT, Emergency, Wards, Pharmacy).
 - **Interactive Zone Analytics & Drawer:** Dynamic inspection drawer visualizing continuous power waveforms, peak demand thresholds, and historical energy logs per wing.
 - **Predictive Asset Maintenance:** Equipment health scoring for chillers, generators, and UPS systems with degradation risk indicators and work-order scheduling.
-- **AI Demand Forecasting & Tariff Analytics:** 7-day electrical load forecasting and anomaly detection implemented via Groq LLM (`llama-3.3-70b-versatile`) with Scikit-Learn `LinearRegression` fallback, alongside carbon footprint and peak/off-peak tariff cost calculations. *(ARIMA, LSTM, and Isolation Forest time-series algorithms are planned future enhancements).*
+- **AI Demand Forecasting & Tariff Analytics:** 7-day electrical load forecasting and anomaly detection implemented via Groq LLM (`llama-3.3-70b-versatile`) with Scikit-Learn `LinearRegression` fallback, alongside carbon footprint and peak/off-peak tariff cost calculations.
 - **Context-Aware Clinical Assistant:** Embedded chatbot powered by FastAPI and Groq LLM (`llama-3.3-70b-versatile`) with live telemetry context injection and page-aware quick replies.
 - **Compliance Reporting & Audit Export:** Server-side PDF generation via ReportLab alongside CSV telemetry export for environmental and hospital regulatory compliance.
 
@@ -236,9 +236,10 @@ pytest
 
 ## Future Improvements
 
-1. **Hardware IoT Gateway Integration:** Ingest live readings from industrial Modbus/BACnet energy meters via MQTT brokers for physical facility deployment.
-2. **Automated Demand Response & Peak Shaving:** Programmatic control signals communicating directly with hospital HVAC chillers and variable frequency drives (VFDs).
-3. **Air-Gapped Local LLM Inference:** Option to deploy quantized open-source models (e.g. Llama-3 via vLLM/Ollama) on hospital premises for HIPAA/data privacy air-gapped compliance.
+1. **Advanced Time-Series Models:** ARIMA, LSTM and Isolation Forest for demand forecasting and anomaly detection.
+2. **Hardware IoT Gateway Integration:** Ingest live readings from industrial Modbus/BACnet energy meters via MQTT brokers for physical facility deployment.
+3. **Automated Demand Response & Peak Shaving:** Programmatic control signals communicating directly with hospital HVAC chillers and variable frequency drives (VFDs).
+4. **Air-Gapped Local LLM Inference:** Option to deploy quantized open-source models (e.g. Llama-3 via vLLM/Ollama) on hospital premises for HIPAA/data privacy air-gapped compliance.
 
 ---
 
@@ -247,4 +248,6 @@ pytest
 Distributed under the [MIT License](LICENSE).
 
 **Author:** Spoorti Biradar  
-**GitHub Profile:** [https://github.com/spoortibiradar8](https://github.com/spoortibiradar8)
+**GitHub Profile:** [https://github.com/spoortibiradar8](https://github.com/spoortibiradar8)  
+**Email:** TODO  
+**LinkedIn:** TODO
