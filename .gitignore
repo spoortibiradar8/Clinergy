@@ -25,6 +25,7 @@ CLINERGY_PROJECT_REPORT.md
 
 # Python & Backend
 __pycache__
+.pytest_cache/
 *.py[cod]
 *$py.class
 .venv
