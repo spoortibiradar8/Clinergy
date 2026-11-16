@@ -17,7 +17,7 @@ _GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 _GROQ_MODEL = "llama-3.3-70b-versatile"
 
 
-# ── Data-fetching helpers ─────────────────────────────────────────────────────
+# ── Data-fetching helpers ─────────────────────────────────────
 
 def _fetch_zone_summary() -> list[dict]:
     try:
@@ -81,7 +81,7 @@ def _fetch_maintenance() -> list[dict]:
         return []
 
 
-# ── System prompt builder ─────────────────────────────────────────────────────
+# ── System prompt builder ──────────────────────────────────────────
 
 async def _build_system_prompt(current_page: str, user_role: str) -> str:
     import json
