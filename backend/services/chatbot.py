@@ -155,7 +155,7 @@ You can answer questions about:
 - Never fabricate data — only use what is in the context above."""
 
 
-# ── Public entry points ───────────────────────────────────────────────────────
+# ── Public entry points ─────────────────────────────────────────────────
 
 async def send_chat_message(
     history: list[ChatMessage],
@@ -169,7 +169,7 @@ async def send_chat_message(
     """
     if not settings.groq_api_key:
         return (
-            "⚠️ **AI not configured.** Please set `GROQ_API_KEY` in `backend/.env`.\n\n"
+            "**AI not configured.** Please set `GROQ_API_KEY` in `backend/.env`.\n\n"
             "In the meantime, check the **Dashboard** or **AI Insights** page for live data."
         )
 
@@ -201,8 +201,8 @@ async def send_chat_message(
 
     except Exception as exc:
         if "401" in str(exc) or "API" in str(exc):
-            return "⚠️ **Invalid API key.** Please check `GROQ_API_KEY` in `backend/.env`."
-        return "😔 I'm having trouble connecting right now. Please try again in a moment."
+            return " **Invalid API key.** Please check `GROQ_API_KEY` in `backend/.env`."
+        return "I'm having trouble connecting right now. Please try again in a moment."
 
 
 def get_quick_replies(current_page: str) -> list[str]:
